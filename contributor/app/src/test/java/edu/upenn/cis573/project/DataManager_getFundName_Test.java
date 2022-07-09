@@ -5,6 +5,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -267,5 +270,20 @@ public class DataManager_getFundName_Test {
 
         boolean result = dm.makeDonation("1", "1", "10");
         assertFalse(result);
+    }
+
+    @Test
+    public void testDateFormat() throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+//        Date date = new Date();
+//        String s1 = sdf.format(date);
+//        System.out.println(s1);
+        String p1 = "2022-07-09T04:21:04.807Z";
+        p1 = p1.substring(0, 10);
+        Date parse = sdf2.parse(p1);
+        System.out.println(parse);
+        String format = sdf.format(parse);
+        System.out.println(format);
     }
 }

@@ -1,6 +1,9 @@
 package edu.upenn.cis573.project;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Donation implements Serializable {
 
@@ -33,7 +36,22 @@ public class Donation implements Serializable {
     }
 
     public String toString() {
-        return fundName + ": $" + amount + " on " + date;
+        String newDate = changeDateFormat(date);
+        return fundName + ": $" + amount + " on " + newDate;
+    }
+
+    private String changeDateFormat(String date) {
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date parseDate = null;
+        try {
+            parseDate = sdf1.parse(date.substring(0, 10));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return date;
+        }
+        SimpleDateFormat sdf2 = new SimpleDateFormat("MMM dd, yyyy");
+        date = sdf2.format(parseDate);
+        return date;
     }
 
 

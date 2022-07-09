@@ -137,6 +137,18 @@ public class MakeDonationActivity extends AppCompatActivity {
 
         EditText amountField = findViewById(R.id.amountField);
         String amount = amountField.getText().toString();
+        // check if amount is valid.
+        try {
+            int numAmount = Integer.parseInt(amount);
+            if (numAmount <= 0) {
+                Toast.makeText(this, "the amount of donation must be greater than zero!!!", Toast.LENGTH_LONG).show();
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "amount of donation must be a positive Integer", Toast.LENGTH_LONG).show();
+            return;
+        }
         Contributor contributor = MainActivity.contributor;
         String contributorId = contributor.getId();
 
