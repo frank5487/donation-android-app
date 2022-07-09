@@ -179,6 +179,8 @@ public class DataManager {
      * This method uses the /makeDonation endpoint in the API
      * @return true if successful, false otherwise
      */
+    // TODO: has a bug here, we should check if contributor and fund already existed first, (it turns out that api has checked for me already)
+    //  also the amount of money must be greater than and be an Integer type which is regulated by the schema
     public boolean makeDonation(String contributorId, String fundId, String amount) {
 
         try {
@@ -187,6 +189,9 @@ public class DataManager {
             map.put("contributor", contributorId);
             map.put("fund", fundId);
             map.put("amount", amount);
+            if (Integer.parseInt(amount) <= 0) {
+                return false;
+            }
             String response = client.makeRequest("/makeDonation", map);
             
             JSONObject json = new JSONObject(response);
