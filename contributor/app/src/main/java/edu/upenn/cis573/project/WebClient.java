@@ -75,6 +75,7 @@ public class WebClient implements Runnable {
             response = "";
             while (in.hasNext()) {
                 String line = in.nextLine();
+//                System.out.println(line);
                 response += line;
             }
 
