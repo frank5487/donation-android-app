@@ -29,6 +29,7 @@ public class DataManager {
 			map.put("login", login);
 			map.put("password", password);
 			String response = client.makeRequest("/findOrgByLoginAndPassword", map);
+//			System.out.println(response);
 
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);
@@ -39,7 +40,9 @@ public class DataManager {
 				JSONObject data = (JSONObject)json.get("data");
 				String fundId = (String)data.get("_id");
 				String name = (String)data.get("name");
-				String description = (String)data.get("descrption");
+				String description = (String)data.get("description"); //add 'i'
+//				add assert
+				assert fundId!=null && name!=null;
 				Organization org = new Organization(fundId, name, description);
 
 				JSONArray funds = (JSONArray)data.get("funds");
@@ -50,6 +53,9 @@ public class DataManager {
 					name = (String)fund.get("name");
 					description = (String)fund.get("description");
 					long target = (Long)fund.get("target");
+//					add assert
+					assert fundId!=null && name!=null;
+					assert target > 0;
 
 					Fund newFund = new Fund(fundId, name, description, target);
 
@@ -59,8 +65,14 @@ public class DataManager {
 					while(it2.hasNext()){
 						JSONObject donation = (JSONObject) it2.next();
 						String contributorId = (String)donation.get("contributor");
+//						System.out.println(contributorId);
 						String contributorName = this.getContributorName(contributorId);
+//						String contributorName = this.getContributorName("62cc35809397e92ec0263d7b");
+//						System.out.println(contributorName);
 						long amount = (Long)donation.get("amount");
+//						add assert
+						assert fundId!=null && contributorName!=null;
+						assert amount > 0;
 						String date = (String)donation.get("date");
 						donationList.add(new Donation(fundId, contributorName, amount, date));
 					}
@@ -73,10 +85,20 @@ public class DataManager {
 
 				return org;
 			}
-			else return null;
+//			add else if: login failed
+			else if (status.equals("login failed")){
+				System.out.println("Login failed, please try again.");
+				return null;
+			}
+//			add else: error
+			else {
+				System.out.println("Enconter an error, please try again.");
+				return null;
+			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Exception Error (attemptLogin)");
+//			e.printStackTrace();
 			return null;
 		}
 	}
@@ -93,6 +115,7 @@ public class DataManager {
 			Map<String, Object> map = new HashMap<>();
 			map.put("id", id);
 			String response = client.makeRequest("/findContributorNameById", map);
+//			System.out.println(response);
 
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);
@@ -100,13 +123,24 @@ public class DataManager {
 
 			if (status.equals("success")) {
 				String name = (String)json.get("data");
+//				System.out.println(name);
 				return name;
 			}
-			else return null;
-
+//			add else if: not found
+			else if (status.equals("not found")){
+				System.out.println("Cannot find the name by id, please check id and try again.");
+				return null;
+			}
+//			add else: error
+			else {
+				System.out.println("Enconter an error, please check id and try again.");
+				return null;
+			}
 
 		}
 		catch (Exception e) {
+			System.out.println("Exception Error (getContributorName)");
+//			e.printStackTrace();
 			return null;
 		}	
 	}
@@ -118,17 +152,24 @@ public class DataManager {
 	public Fund createFund(String orgId, String name, String description, long target) {
 
 		try {
-
+//			add assumption that target > 0
+			if(target <=0) {
+				System.out.println("target should be greater than 0.");
+				return null;
+			}
+//			if(target <=0) throw new IllegalArgumentException();
 			Map<String, Object> map = new HashMap<>();
 			map.put("orgId", orgId);
 			map.put("name", name);
 			map.put("description", description);
 			map.put("target", target);
 			String response = client.makeRequest("/createFund", map);
+//			System.out.println(response);
 
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);
 			String status = (String)json.get("status");
+//			System.out.println(status);
 
 			if (status.equals("success")) {
 				JSONObject fund = (JSONObject)json.get("data");
@@ -139,7 +180,8 @@ public class DataManager {
 
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Exception Error (createFund)");
+//			e.printStackTrace();
 			return null;
 		}	
 	}

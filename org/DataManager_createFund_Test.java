@@ -37,5 +37,60 @@ public class DataManager_createFund_Test {
 		assertEquals(10000, f.getTarget());
 		
 	}
+	
+	@Test
+	public void testFailedCreation() {
+
+		DataManager dm = new DataManager(new WebClient("localhost", 3001) 
+		{
+			
+			@Override
+			public String makeRequest(String resource, Map<String, Object> queryParams) {
+//				{"status":"error","data":{"stringValue":"\"\"","valueType":"string","kind":"ObjectId","value":"","path":"_id","reason":{},"name":"CastError","message":"Cast to ObjectId failed for value \"\" (type string) at path \"_id\" for model \"Organization\""}}
+				return "{\"status\":\"error\",\"data\":{\"stringValue\":\"\\\"\\\"\",\"valueType\":\"string\",\"kind\":\"ObjectId\",\"value\":\"\",\"path\":\"_id\",\"reason\":{},\"name\":\"CastError\",\"message\":\"Cast to ObjectId failed for value \\\"\\\" (type string) at path \\\"_id\\\" for model \\\"Organization\\\"\"}}";
+			}
+			
+		}
+		);
+		
+		
+		Fund f = dm.createFund("", "fund", "this is the new fund", 1000);
+		
+		assertNull("failed to create a new fund.",f);
+		
+	}
+	
+	@Test
+	public void testNegativeTargetCreation() {
+
+		DataManager dm = new DataManager(new WebClient("localhost", 3001));
+		
+		
+		Fund f = dm.createFund("62cc2b599397e92ec0263d34", "fund", "this is the new fund", -500);
+		
+		assertNull("failed to create a new fund.",f);
+		
+	}
+	
+	@Test
+	public void testExceptionErrorInCreation() {
+
+		DataManager dm = new DataManager(new WebClient("localhost", 3001) 
+		{
+			
+			@Override
+			public String makeRequest(String resource, Map<String, Object> queryParams) {
+				return null;
+			}
+			
+		}
+		);
+		
+		
+		Fund f = dm.createFund(null, null, "this is the new fund", 10000);
+		
+		assertNull("encountered an exception error.",f);
+		
+	}
 
 }
