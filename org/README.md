@@ -76,10 +76,10 @@ assertions on those variables. The first three should be not null, and the last
 two should be greater than 0.
 
 Task 1.7 
-bug1: need while loop instead of if so that wrong input get a chance to re-enter 
+bug1: need while loop instead of if so that wrong input get a chance to re-enter .
 
 Task 1.8
-bug1: need try.catch method to avoid bad date format, for any unregonized input return null for this function 
+bug1: need try.catch method to avoid bad date format, for any unrecognized input return null for this function.
 
 
  
