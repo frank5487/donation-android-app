@@ -6,7 +6,7 @@ Project setup guide can be found [here](https://docs.google.com/document/d/1qzda
 |Name | PennID |
 |---|---|
 |Yung-Jen Yang| 65314711|
-| Tianyi Zhang  |   |
+| Tianyi Zhang  | 64934089 |
 |   |   |
 |   |   |
 
