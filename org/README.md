@@ -78,6 +78,7 @@ two should be greater than 0.
 
 
 Task 1.3. Organization App display total donations for fund
+
 A few lines are added to the displayFund() function from the UserInterFace file to implement this functionality.
 
 
