@@ -75,6 +75,9 @@ bug2: no restriction on fundId, name, contributorName, target, amount -\> fix:
 assertions on those variables. The first three should be not null, and the last
 two should be greater than 0.
 
+Task 1.3. Organization App display total donations for fund
+A few lines are added to the displayFund() function from the UserInterFace file to implement this functionality.
+
 Task 1.7 
 bug1: need while loop instead of if so that wrong input get a chance to re-enter .
 
@@ -87,4 +90,5 @@ bug1: need try.catch method to avoid bad date format from parse(date) method, fo
 Contributions:
 
 Tianyi Zhang: Task1.1 and Task1.2
+Muxue Kou: Task1.3
 Zhihao Yan: Task 1.7 and Task 1.8
