@@ -43,27 +43,42 @@ public class UserInterface {
 	}
 	
 	public void createFund() {
-		
-		System.out.print("Enter the fund name: ");
-		String name = in.nextLine().trim();
-		
-		System.out.print("Enter the fund description: ");
-		String description = in.nextLine().trim();
-		
-		System.out.print("Enter the fund target: ");
-		long target = in.nextInt();
-		in.nextLine();
+		  
+		  System.out.print("Enter the fund name: ");
+		  String name = in.nextLine().trim();
+		  while (name.length() <= 2 || name.length() >=20){
+		   System.out.println("Name too short or too long, please re-enter:");
+		   name = in.nextLine().trim();
+		  }
+		  
+		  System.out.print("Enter the fund description: ");
+		  String description = in.nextLine().trim();
+		  while (description.length() == 0){
+		   System.out.println("Description can not be empty, please re-enter:");
+		   description = in.nextLine().trim();
+		  }
+		  
+		  System.out.print("Enter the fund target: ");
+		  long target = in.nextInt();
+		  while (target <= 0){
+		   System.out.println("Must be a positive number, please re-enter:");
+		   target = in.nextInt();
+		  }
+		  in.nextLine();
 
-		Fund fund = dataManager.createFund(org.getId(), name, description, target);
-		org.getFunds().add(fund);
+		  Fund fund = dataManager.createFund(org.getId(), name, description, target);
+		  org.getFunds().add(fund);
 
-		
-	}
+		  
+		 }
+
+    
 	
 	
-	public void displayFund(int fundNumber) {
-		
+	 public void displayFund(int fundNumber) {
+  
 		Fund fund = org.getFunds().get(fundNumber - 1);
+		
 		
 		System.out.println("\n\n");
 		System.out.println("Here is information about this fund:");
@@ -74,15 +89,19 @@ public class UserInterface {
 		List<Donation> donations = fund.getDonations();
 		System.out.println("Number of donations: " + donations.size());
 		for (Donation donation : donations) {
-			System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + donation.getDate());
+		System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + donation.getDate());
 		}
-	
+		
+		long sum = 0;
+			for (Donation donation: donations) {
+				sum = sum + donation.getAmount();
+			}
+		System.out.println("Total amount of donations: " + sum);
+		System.out.println("Persentage Achieved: " + (sum/fund.getTarget())*100 + "%");
+		
 		
 		System.out.println("Press the Enter key to go back to the listing of funds");
-		in.nextLine();
-		
-		
-		
+		in.nextLine(); 
 	}
 	
 	
@@ -90,6 +109,8 @@ public class UserInterface {
 		
 		DataManager ds = new DataManager(new WebClient("localhost", 3001));
 		
+//		String login ="org1";
+//		String password ="123";
 		String login = args[0];
 		String password = args[1];
 		

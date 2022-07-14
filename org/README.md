@@ -75,6 +75,8 @@ bug2: no restriction on fundId, name, contributorName, target, amount -\> fix:
 assertions on those variables. The first three should be not null, and the last
 two should be greater than 0.
 
+bug3: data.get("descrption”) should be data.get("description”) //add i
+
  
 
 Contributions:

@@ -72,7 +72,7 @@ public class DataManager {
 						long amount = (Long)donation.get("amount");
 //						add assert
 						assert fundId!=null && contributorName!=null;
-						assert amount > 0;
+						assert amount > 0 && amount<=target;
 						String date = (String)donation.get("date");
 						donationList.add(new Donation(fundId, contributorName, amount, date));
 					}

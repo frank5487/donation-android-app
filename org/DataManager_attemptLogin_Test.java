@@ -44,7 +44,8 @@ public class DataManager_attemptLogin_Test {
 		Donation d=o.getFunds().get(0).getDonations().get(0);
 		assertEquals("ctb1", d.getContributorName());
 		assertEquals(100, d.getAmount());
-		assertEquals("2022-07-11T14:38:56.984Z", d.getDate());
+		assertEquals("July 11, 2022", d.getDate());
+//		assertEquals("2022-07-11T14:38:56.984Z", d.getDate());
 	}
 	
 	@Test
@@ -97,7 +98,7 @@ public class DataManager_attemptLogin_Test {
 			
 			@Override
 			public String makeRequest(String resource, Map<String, Object> queryParams) {
-				return "{\"data\" : \"err\"}";
+				return null;
 			}
 			
 		}
