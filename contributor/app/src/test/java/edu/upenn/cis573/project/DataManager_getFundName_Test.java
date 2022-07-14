@@ -74,7 +74,23 @@ public class DataManager_getFundName_Test {
 
     @Test
     public void testAttemptLogin() throws JSONException {
-
+        String mockJson = "{\n" +
+                "\"status\":\"success\",\n" +
+                "  \"data\": {\n" +
+                "    \"_id\": \"1\",\n" +
+                "    \"name\": \"lkk\",\n" +
+                "    \"email\": \"hp@com\",\n" +
+                "    \"creditCardNumber\": \"1111\",\n" +
+                "    \"creditCardCVV\": \"222\",\n" +
+                "    \"creditCardExpiryMonth\": 5,\n" +
+                "    \"creditCardExpiryYear\": 25,\n" +
+                "    \"creditCardPostCode\": \"15555\",\n" +
+                "    \"donations\": [\n" +
+                "      {\"fund\": \"55688\",\"date\": \"07/07/2022\",\"amount\": 29},\n" +
+                "      {\"fund\": \"5588\",\"date\": \"07/08/2022\",\"amount\": 9}\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}";
 //        String donations = "[{\"fund\":\"55688\",\"date\":\"07/07/2022\",\"amount\":" + 29 + "}]";
 //        System.out.println(donations);
 //        String contributorInfo = "\"_id\":\"1\",\"name\":\"lkk\",\"email\":\"hp@com\"," +
