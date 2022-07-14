@@ -14,6 +14,6 @@
   - handle error in the MakeDonationActivity
     - prompts the user to re-enter the value when they have invalid input
      
-- Task1.7:
+- Task1.8:
   - changed date format
 
