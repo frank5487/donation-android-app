@@ -1,3 +1,7 @@
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Donation {
 	
 	private String fundId;
@@ -25,9 +29,21 @@ public class Donation {
 	}
 
 	public String getDate() {
-		return date;
-	}
+		  try {
+		   Date newDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(date);
+		   String formattedDate = new SimpleDateFormat("MMMMM dd, yyyy").format(newDate);
+		   return formattedDate;
+		  }   catch(Exception e){
+		   System.out.println("bad Date format/unable to parse date");
+		   return null;
+		   }
+		   
+		 }
 	
-	
+//	public static void main(String[] args) {
+//		Donation d = new Donation("1","1",1,"2022-07-11T14:38:56.984Z");
+//		System.out.println(d.getDate());
+//		
+//	}
 
 }

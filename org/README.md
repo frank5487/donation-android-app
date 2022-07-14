@@ -91,6 +91,7 @@ bug1: need while loop instead of if so that wrong input get a chance to re-enter
 Task 1.8
 bug1: need try.catch method to avoid bad date format from parse(date) method, for any unrecognized input return null for this function.
 
+bug3: data.get("descrption”) should be data.get("description”) //add i
 
  
 

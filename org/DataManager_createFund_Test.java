@@ -60,6 +60,7 @@ public class DataManager_createFund_Test {
 		
 	}
 	
+//	@Test(expected = IllegalArgumentException.class)
 	@Test
 	public void testNegativeTargetCreation() {
 
@@ -67,6 +68,7 @@ public class DataManager_createFund_Test {
 		
 		
 		Fund f = dm.createFund("62cc2b599397e92ec0263d34", "fund", "this is the new fund", -500);
+//		System.out.println(f);
 		
 		assertNull("failed to create a new fund.",f);
 		
