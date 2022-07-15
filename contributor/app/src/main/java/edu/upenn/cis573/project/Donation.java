@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Donation implements Serializable {
 
@@ -49,7 +50,7 @@ public class Donation implements Serializable {
             e.printStackTrace();
             return date;
         }
-        SimpleDateFormat sdf2 = new SimpleDateFormat("MMM dd, yyyy");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH);
         date = sdf2.format(parseDate);
         return date;
     }
