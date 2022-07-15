@@ -11,16 +11,26 @@ public class DataManagerMakeDonationTest {
 
     @Test
     public void testForMakeDonation() {
-
+        String mockJson = "{\n" +
+                "  \"status\":" +
+                " \"success\",\n" +
+                "  \"data\": {\n" +
+                "    \"contributor\": \"100\",\n" +
+                "    \"fund\": \"202\",\n" +
+                "    \"date\": \"08/08/2022\",\n" +
+                "    \"amount\": 20\n" +
+                "  }\n" +
+                "}";
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                String donation = "{\"contributor\":\"100\",\"fund\":\"202\",\"date\":" +
-                        "\"08/08/2022\",\"amount\":" + 20 + "}";
-                String data = "\"data\":" + donation;
-                String status = "\"status\":\"success\"";
-                String response = "{" + status + "," + data + "}";
-                return response;
+//                String donation = "{\"contributor\":\"100\",\"fund\":\"202\",\"date\":" +
+//                        "\"08/08/2022\",\"amount\":" + 20 + "}";
+//                String data = "\"data\":" + donation;
+//                String status = "\"status\":\"success\"";
+//                String response = "{" + status + "," + data + "}";
+//                return response;
+                return mockJson;
             }
         });
 
@@ -29,17 +39,28 @@ public class DataManagerMakeDonationTest {
     }
 
     @Test
-    public void testForMakeDonationTwo() {
+    public void testForMakeDonationWithNegativeDonate() {
 
+        String mockJson = "{\n" +
+                "  \"status\":" +
+                " \"success\",\n" +
+                "  \"data\": {\n" +
+                "    \"contributor\": \"100\",\n" +
+                "    \"fund\": \"202\",\n" +
+                "    \"date\": \"08/08/2022\",\n" +
+                "    \"amount\": -10\n" +
+                "  }\n" +
+                "}";
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                String donation = "{\"contributor\":\"100\",\"fund\":\"202\",\"date\":" +
-                        "\"08/08/2022\",\"amount\":" + -10 + "}";
-                String data = "\"data\":" + donation;
-                String status = "\"status\":\"success\"";
-                String response = "{" + status + "," + data + "}";
-                return response;
+//                String donation = "{\"contributor\":\"100\",\"fund\":\"202\",\"date\":" +
+//                        "\"08/08/2022\",\"amount\":" + -10 + "}";
+//                String data = "\"data\":" + donation;
+//                String status = "\"status\":\"success\"";
+//                String response = "{" + status + "," + data + "}";
+//                return response;
+                return mockJson;
             }
         });
 
@@ -48,17 +69,22 @@ public class DataManagerMakeDonationTest {
     }
 
     @Test
-    public void testForMakeDonationThree() {
+    public void testForMakeDonationWithFalseJson() {
 
+        String mockJson = "{\n" +
+                "  \"status\":" +
+                " \"success\",\n" +
+                "  \"data\": {\n" +
+                "    \"contributor\": \"100\",\n" +
+                "    \"fund\": \"202\",\n" +
+                "    \"date\": \"08/08/2022\",\n" +
+                "    \"amount\": 10\n" +
+                "  }\n" +
+                "";
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                String donation = "{\"contributor\":\"100\",\"fund\":\"202\",\"date\":" +
-                        "\"08/08/2022\",\"amount\":" + -10 + "}";
-                String data = "\"data\":" + donation;
-                String status = "\"status\":\"success\"";
-                String response = "{" + status + "," + data + "";
-                return response;
+                return mockJson;
             }
         });
 

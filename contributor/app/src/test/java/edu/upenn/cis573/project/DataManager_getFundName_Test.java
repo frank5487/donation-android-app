@@ -33,7 +33,7 @@ public class DataManager_getFundName_Test {
     }
 
     @Test
-    public void testGetFundNameTwo() {
+    public void testGetFundNameWithFailStatus() {
 
         DataManager dm = new DataManager(new WebClient(null, 0) {
 
@@ -49,13 +49,13 @@ public class DataManager_getFundName_Test {
     }
 
     @Test
-    public void testGetFundNameThree() {
+    public void testGetFundNameWithEmptyData() {
 
         DataManager dm = new DataManager(new WebClient(null, 0) {
 
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "{\"status\":\"fail\",\"data\":\"Snoopy\"";
+                return "{\"status\":\"success\"}";
             }
         });
 
@@ -63,4 +63,25 @@ public class DataManager_getFundName_Test {
         assertNull(name);
     }
 
+    @Test
+    public void testGetFundNameWithCache() {
+
+        String mockJson = "{\n" +
+                "  \"status\":" +
+                " \"success\",\n" +
+                "  \"data\": \"Ahoy\"\n" +
+                "}";
+
+        DataManager dm = new DataManager(new WebClient(null, 0) {
+
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return mockJson;
+            }
+        });
+
+        String name = dm.getFundName("12345");
+        assertEquals("Ahoy", name);
+        name = dm.getFundName("12345"); // get value from cache
+    }
 }

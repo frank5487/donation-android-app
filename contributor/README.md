@@ -17,3 +17,15 @@
 - Task1.8:
   - changed date format
 
+## phase2 writeup
+- Task2.4
+  - create a variable cache to memorize the calculated result so that it doesn't need to make request to API server again, which avoid the redundancy requests and improve the efficiency
+  - the variable of cache is Map instance where key represents fundID (String type), value represents fundName (String type).
+
+- Task2.5
+  - ...
+
+
+- Task2.6
+  - ...
+
