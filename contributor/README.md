@@ -23,9 +23,9 @@
   - the variable of cache is Map instance where key represents fundID (String type), value represents fundName (String type).
 
 - Task2.5
-  - ...
-
-
+  - implement the defensive programming 
+  - handle these situations related to illegal arguments (null input), wrong response from server (client may be null), wrong format of json
+  
 - Task2.6
   - ...
 
