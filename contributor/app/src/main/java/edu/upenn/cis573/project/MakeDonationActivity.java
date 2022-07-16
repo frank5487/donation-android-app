@@ -14,9 +14,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MakeDonationActivity extends AppCompatActivity {
 
@@ -158,7 +160,16 @@ public class MakeDonationActivity extends AppCompatActivity {
 
         if (success) {
             Toast.makeText(this, "Thank you for your donation!", Toast.LENGTH_LONG).show();
-            contributor.getDonations().add(new Donation(selectedFund.getName(), contributor.getName(), Long.parseLong(amount), new Date().toString()));
+            contributor.getDonations().add(new Donation(selectedFund.getName(), contributor.getName(), Long.parseLong(amount), new SimpleDateFormat("MMM dd, yyyy").format(new Date())));
+            Map<String, Long[]> cache = contributor.getCache();
+            if (!cache.containsKey(selectedFund.getName())) {
+                cache.put(selectedFund.getName(), new Long[] {(long) 1, Long.parseLong(amount)});
+            } else {
+                Long[] l = cache.get(selectedFund.getName());
+                l[0]++;
+                l[1] += Long.parseLong(amount);
+                cache.put(selectedFund.getName(), l);
+            }
 
             new AsyncTask<String, String, String>() {
 

@@ -27,5 +27,6 @@
   - handle these situations related to illegal arguments (null input), wrong response from server (client may be null), wrong format of json
   
 - Task2.6
-  - ...
-
+  - create an another page (activity) called AggregateDonationsActivity to show the aggregate results.
+  - use cache to store previous result, avoid duplicated calculations. We also need to update our cache when the contributor makes a new donation.
+  - the aggregate results is sorted by total donations decreasingly.
