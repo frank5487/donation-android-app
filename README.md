@@ -10,16 +10,16 @@ Project setup guide can be found [here](https://docs.google.com/document/d/1qzda
 | Muxue Kou  |  77584124 |
 | Zhihao Yan | 30907859  |
 
-Bold font means these optional tasks should be graded.
+Bold and Italic font means these optional tasks should be graded.
 
 #### phase 1
 * Work distribution:
-  * [Yung-Jen Yang](./contributor/README.md): Task1.4, **Task1.5**, **Task1.6**, Task1.8
+  * [Yung-Jen Yang](./contributor/README.md): Task1.4, ***Task1.5***, ***Task1.6***, Task1.8
   * [Tianyi Zhang](./org/README.md): Task1.1 and Task1.2
   * [Muxue Kou](./org/README.md): Task1.3
-  * [Zhihao Yan](./org/README.md): **Task1.7** and Task 1.8
+  * [Zhihao Yan](./org/README.md): ***Task1.7*** and Task 1.8
 
   #### phase2
 * Work distribution:
-  * [Yung-Jen Yang](./contributor/README.md): **Task2.4**, 
+  * [Yung-Jen Yang](./contributor/README.md): ***Task2.4***, Task2.5, ***Task2.6***
 
