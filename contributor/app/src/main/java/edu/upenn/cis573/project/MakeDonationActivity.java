@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +32,12 @@ public class MakeDonationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_donation);
 
-        final List<Organization> orgs = dataManager.getAllOrganizations();
+        List<Organization> orgs = new ArrayList<>();
+        try {
+            orgs = dataManager.getAllOrganizations();
+        } catch (IllegalStateException e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+        }
         selectedOrg = orgs.get(0);
         if (selectedOrg.getFunds().isEmpty() == false) {
             selectedFund = selectedOrg.getFunds().get(0);
@@ -43,13 +49,14 @@ public class MakeDonationActivity extends AppCompatActivity {
         final Spinner orgSpinner = findViewById(R.id.orgSpinner);
         final Spinner fundSpinner = findViewById(R.id.fundSpinner);
 
+        List<Organization> finalOrgs = orgs;
         orgSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 String selectedOrgName = (String) adapterView.getItemAtPosition(i);
 
-                for (Organization org : orgs) {
+                for (Organization org : finalOrgs) {
 
                     if (org.getName().equals(selectedOrgName)) {
                         selectedOrg = org;
@@ -156,7 +163,13 @@ public class MakeDonationActivity extends AppCompatActivity {
 
         Log.v("makeDonation", orgId + " " + fundId + " " + amount + " " + contributorId);
 
-        boolean success = dataManager.makeDonation(contributorId, fundId, amount);
+        boolean success = false;
+        try {
+            success = dataManager.makeDonation(contributorId, fundId, amount);
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+            return;
+        }
 
         if (success) {
             Toast.makeText(this, "Thank you for your donation!", Toast.LENGTH_LONG).show();

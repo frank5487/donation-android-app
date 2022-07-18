@@ -31,11 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             contributor = dataManager.attemptLogin(login, password);
-        } catch (IllegalArgumentException e) {
-            Toast.makeText(this, "input must not be null", Toast.LENGTH_LONG).show();
-            return;
-        } catch (IllegalStateException e) {
-            Toast.makeText(this, "connect to the wrong port... or this is not a json format data...", Toast.LENGTH_LONG).show();
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
             return;
         }
 
