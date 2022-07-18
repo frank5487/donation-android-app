@@ -68,7 +68,7 @@ public class DataManagerMakeDonationTest {
         assertFalse(result);
     }
 
-    @Test
+    @Test (expected = IllegalStateException.class)
     public void testForMakeDonationWithFalseJson() {
 
         String mockJson = "{\n" +
@@ -81,6 +81,30 @@ public class DataManagerMakeDonationTest {
                 "    \"amount\": 10\n" +
                 "  }\n" +
                 "";
+        DataManager dm = new DataManager(new WebClient(null, 0) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return mockJson;
+            }
+        });
+
+        boolean result = dm.makeDonation("1", "1", "10");
+        assertFalse(result);
+    }
+
+    @Test
+    public void testForMakeDonationWithNonExistedJson() {
+
+        String mockJson = "{\n" +
+                "  \"stats\":" +
+                " \"success\",\n" +
+                "  \"data\": {\n" +
+                "    \"contributor\": \"100\",\n" +
+                "    \"fund\": \"202\",\n" +
+                "    \"date\": \"08/08/2022\",\n" +
+                "    \"amount\": 10\n" +
+                "  }\n" +
+                "}";
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {

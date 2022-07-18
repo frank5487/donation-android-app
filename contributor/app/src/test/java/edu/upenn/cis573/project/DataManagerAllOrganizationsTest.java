@@ -116,7 +116,7 @@ public class DataManagerAllOrganizationsTest {
 
         String mockJson = "{\n" +
                 "  \"status\":" +
-                " \"fail\",\n" +
+                " \"success\",\n" +
                 "  \"data\": [\n" +
                 "    {\n" +
                 "      \"_id\": \"55688\",\n" +

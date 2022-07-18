@@ -21,9 +21,6 @@ public class DataManager {
     private Map<String, String> cache;
 
     public DataManager(WebClient client) {
-        if (client == null) {
-            throw new IllegalStateException("client is null");
-        }
         this.client = client;
         cache = new HashMap<>();
     }
