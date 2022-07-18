@@ -30,3 +30,8 @@
   - create an another page (activity) called AggregateDonationsActivity to show the aggregate results.
   - use cache to store previous result, avoid duplicated calculations. We also need to update our cache when the contributor makes a new donation.
   - the aggregate results is sorted by total donations decreasingly.
+
+- Task2.9
+  - I used MD5 to encrypt the contributor's password
+  - For Android (Java), I encapsulated the MD5Util (the code I looked up is from Stackflow)
+  - For admin.js, I npm install md5 library to encrypt the password

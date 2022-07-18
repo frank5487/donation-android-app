@@ -3,6 +3,9 @@ package edu.upenn.cis573.project;
 import android.util.JsonReader;
 import android.util.Log;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -35,6 +38,13 @@ public class DataManager {
         if (login == null || password == null) {
             throw new IllegalArgumentException("input must not be null");
         }
+
+        try {
+            password = MD5Util.encodeByMd5(password);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
         if (client == null) {
             throw new IllegalStateException("client is null");
         }
