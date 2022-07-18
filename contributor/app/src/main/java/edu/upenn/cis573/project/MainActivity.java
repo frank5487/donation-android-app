@@ -29,8 +29,15 @@ public class MainActivity extends AppCompatActivity {
         EditText passwordField = findViewById(R.id.passwordField);
         String password = passwordField.getText().toString();
 
-
-        contributor = dataManager.attemptLogin(login, password);
+        try {
+            contributor = dataManager.attemptLogin(login, password);
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(this, "input must not be null", Toast.LENGTH_LONG).show();
+            return;
+        } catch (IllegalStateException e) {
+            Toast.makeText(this, "connect to the wrong port... or this is not a json format data...", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         if (contributor == null) {
 
