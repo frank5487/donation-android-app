@@ -20,6 +20,7 @@ Bold and Italic font means these optional tasks should be graded.
   * [Zhihao Yan](./org/README.md): ***Task1.7*** and Task 1.8
 
   #### phase2
+  Here is the single writeup for [phase2](./writeup-phase2.md)
 * Work distribution:
-  * [Yung-Jen Yang](./contributor/README.md): ***Task2.4***, Task2.5, ***Task2.6***
+  * [Yung-Jen Yang](./contributor/README.md): ***Task2.4***, Task2.5, ***Task2.6***, ***Task2.9***
 
