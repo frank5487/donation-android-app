@@ -1,5 +1,5 @@
 
-For graded optional tasks: 
+For graded optional tasks: Task2.4, Task2.6, Task2.9
 
 ## work distribution
 - Yung-Jen Yang: Task2.4, Task2.5, Task2.6, Task2.9
