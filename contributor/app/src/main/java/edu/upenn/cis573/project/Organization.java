@@ -1,5 +1,6 @@
 package edu.upenn.cis573.project;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class Organization {
     public Organization(String id, String name) {
         this.id = id;
         this.name = name;
-        funds = new LinkedList<>();
+        funds = new ArrayList<>();
     }
 
     public String getId() {

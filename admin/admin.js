@@ -2,6 +2,8 @@
 var express = require('express');
 var app = express();
 
+const md5 = require('md5');
+
 // set up BodyParser
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -531,7 +533,7 @@ app.use('/createContributor', (req, res) => {
 
 	var contributor = new Contributor({
 		login: req.body.login,
-		password: req.body.password,
+		password: md5(req.body.password),
 		name: req.body.name,
 		email: req.body.email,
 		creditCardNumber: req.body.card_number,
@@ -633,7 +635,7 @@ app.use('/updateContributor', (req, res) => {
 
 	var filter = {"_id" : req.body.id };
 
-	var update = { "login" : req.body.login, "password" : req.body.password, "name" : req.body.name, "email" : req.body.email, "creditCardNumber" : req.body.card_number, "creditCardCVV" : req.body.card_cvv, "creditCardExpiryMonth" : req.body.card_month, "creditCardExpiryYear": req.body.card_year, "creditCardPostCode" : req.body.card_postcode };
+	var update = { "login" : req.body.login, "password" : md5(req.body.password), "name" : req.body.name, "email" : req.body.email, "creditCardNumber" : req.body.card_number, "creditCardCVV" : req.body.card_cvv, "creditCardExpiryMonth" : req.body.card_month, "creditCardExpiryYear": req.body.card_year, "creditCardPostCode" : req.body.card_postcode };
 	
 	var action = { "$set" : update };
 

@@ -1,21 +1,31 @@
 package edu.upenn.cis573.project;
 
+import android.util.JsonReader;
 import android.util.Log;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
+import org.json.JSONStringer;
+import org.json.JSONTokener;
 
 public class DataManager {
 
     private WebClient client;
+    private Map<String, String> cache;
 
     public DataManager(WebClient client) {
         this.client = client;
+        cache = new HashMap<>();
     }
 
 
@@ -25,15 +35,36 @@ public class DataManager {
      * @return the Contributor object if successfully logged in, null otherwise
      */
     public Contributor attemptLogin(String login, String password) {
+        if (login == null || password == null) {
+            throw new IllegalArgumentException("input must not be null");
+        }
 
+        try {
+            password = MD5Util.encodeByMd5(password);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        if (client == null) {
+            throw new IllegalStateException("client is null");
+        }
         try {
             Map<String, Object> map = new HashMap<>();
             map.put("login", login);
             map.put("password", password);
             String response = client.makeRequest("/findContributorByLoginAndPassword", map);
+            if (response == null) {
+                throw new IllegalStateException("connect to the wrong port...");
+            }
 
+            if (!isJson(response)) {
+                throw new IllegalStateException("this is not a json format data...");
+            }
             JSONObject json = new JSONObject(response);
             String status = (String)json.get("status");
+            if (status.equals("error")) {
+                throw new IllegalStateException("something wrong from the response data");
+            }
 
             if (status.equals("success")) {
                 JSONObject data = (JSONObject)json.get("data");
@@ -56,7 +87,14 @@ public class DataManager {
 
                     JSONObject jsonDonation = donations.getJSONObject(i);
 
-                    String fund = getFundName((String)jsonDonation.get("fund"));
+                    String fundId = (String) jsonDonation.get("fund");
+                    if (!cache.containsKey(fundId)) {
+                        String fundName = getFundName(fundId);
+//                        System.out.println("in login(), put id, name into cache" + fundId + " " +  fundName);
+                        cache.put(fundId, fundName);
+                    }
+                    String fund = cache.get(fundId);
+//                    String fund = getFundName((String)jsonDonation.get("fund"));
                     String date = (String)jsonDonation.get("date");
                     long amount = (Integer)jsonDonation.get("amount");
 
@@ -74,7 +112,7 @@ public class DataManager {
             return null;
 
         }
-        catch (Exception e) {
+        catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
@@ -85,24 +123,44 @@ public class DataManager {
      * @return the name of the fund if found, "Unknown fund" if not found, null if an error occurs
      */
     public String getFundName(String id) {
-
+        if (id == null) {
+            throw new IllegalArgumentException("invalid input...");
+        }
+        if (client == null) {
+            throw new IllegalStateException("client is null");
+        }
+        if (cache.containsKey(id)) {
+//            System.out.println("in getFundName(), get value from cache");
+            return cache.get(id);
+        }
         try {
 
             Map<String, Object> map = new HashMap<>();
             map.put("id", id);
             String response = client.makeRequest("/findFundNameById", map);
+            if (response == null) {
+                throw new IllegalStateException("connect to the wrong port...");
+            }
 
+            if (!isJson(response)) {
+                throw new IllegalStateException("this is not a json format data...");
+            }
             JSONObject json = new JSONObject(response);
             String status = (String)json.get("status");
+            if (status.equals("error")) {
+                throw new IllegalStateException("something wrong from the response data");
+            }
 
             if (status.equals("success")) {
                 String name = (String)json.get("data");
+//                System.out.println("in getFundName(), put id, name into cache");
+                cache.put(id, name);
                 return name;
             }
             else return "Unknown Fund";
 
         }
-        catch (Exception e) {
+        catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
@@ -114,12 +172,25 @@ public class DataManager {
      * @return a List of Organization objects if successful, null otherwise
      */
     public List<Organization> getAllOrganizations() {
+        if (client == null) {
+            throw new IllegalStateException("client is null");
+        }
         try {
             Map<String, Object> map = new HashMap<>();
             String response = client.makeRequest("/allOrgs", map);
+            if (response == null) {
+                throw new IllegalStateException("connect to the wrong port...");
+            }
+
+            if (!isJson(response)) {
+                throw new IllegalStateException("this is not a json format data...");
+            }
 
             JSONObject json = new JSONObject(response);
             String status = (String)json.get("status");
+            if (status.equals("error")) {
+                throw new IllegalStateException("something wrong from the response data");
+            }
 
             if (status.equals("success")) {
 
@@ -168,7 +239,7 @@ public class DataManager {
             return null;
 
         }
-        catch (Exception e) {
+        catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
@@ -182,6 +253,12 @@ public class DataManager {
     // TODO: has a bug here, we should check if contributor and fund already existed first, (it turns out that api has checked for me already)
     //  also the amount of money must be greater than and be an Integer type which is regulated by the schema
     public boolean makeDonation(String contributorId, String fundId, String amount) {
+        if (contributorId == null || fundId == null || amount == null) {
+            throw new IllegalArgumentException("invalid input...");
+        }
+        if (client == null) {
+            throw new IllegalStateException("client is null");
+        }
 
         try {
 
@@ -193,17 +270,38 @@ public class DataManager {
                 return false;
             }
             String response = client.makeRequest("/makeDonation", map);
-            
+            if (response == null) {
+                throw new IllegalStateException("connect to the wrong port...");
+            }
+
+            if (!isJson(response)) {
+                throw new IllegalStateException("this is not a json format data...");
+            }
+
             JSONObject json = new JSONObject(response);
             String status = (String)json.get("status");
+
+            if (status.equals("error")) {
+                throw new IllegalStateException("something wrong from the response data");
+            }
 
             return status.equals("success");
 
         }
-        catch (Exception e) {
+        catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
 
+    }
+
+    private boolean isJson(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            return true;
+        } catch (JSONException e) {
+            // e.printStackTrace();
+            return false;
+        }
     }
 }

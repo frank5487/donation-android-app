@@ -1,8 +1,10 @@
 package edu.upenn.cis573.project;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Contributor implements Serializable {
 
@@ -16,6 +18,8 @@ public class Contributor implements Serializable {
     private String creditCardPostCode;
     private List<Donation> donations;
 
+    private Map<String, Long[]> cache;
+
     public Contributor(String id, String name, String email, String creditCardNumber, String creditCardCVV, String creditCardExpiryMonth, String creditCardExpiryYear, String creditCardPostCode) {
         this.id = id;
         this.name = name;
@@ -26,6 +30,7 @@ public class Contributor implements Serializable {
         this.creditCardExpiryYear = creditCardExpiryYear;
         this.creditCardPostCode = creditCardPostCode;
         donations = new LinkedList<>();
+        cache = new HashMap<>();
     }
 
     public String getId() {
@@ -66,5 +71,13 @@ public class Contributor implements Serializable {
 
     public void setDonations(List<Donation> donations) {
         this.donations = donations;
+    }
+
+    public Map<String, Long[]> getCache() {
+        return cache;
+    }
+
+    public void setCache(Map<String, Long[]> cache) {
+        this.cache = cache;
     }
 }

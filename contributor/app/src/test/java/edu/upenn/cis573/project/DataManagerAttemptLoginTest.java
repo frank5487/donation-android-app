@@ -14,6 +14,14 @@ import android.util.Log;
 public class DataManagerAttemptLoginTest {
 
     @Test
+    public void testMD5() throws Exception {
+        String password = "789";
+        String passwordMD5 = MD5Util.encodeByMd5(password);
+        System.out.println(password);
+        System.out.println(passwordMD5);
+    }
+
+    @Test
     public void testAttemptLogin() throws JSONException {
         String mockJson = "{\n" +
                 "\"status\":\"success\",\n" +
@@ -28,23 +36,23 @@ public class DataManagerAttemptLoginTest {
                 "    \"creditCardPostCode\": \"15555\",\n" +
                 "    \"donations\": [\n" +
                 "      {\"fund\": \"55688\",\"date\": \"07/07/2022\",\"amount\": 29},\n" +
-                "      {\"fund\": \"5588\",\"date\": \"07/08/2022\",\"amount\": 9}\n" +
+                "      {\"fund\": \"5588\",\"date\": \"07/08/2022\",\"amount\": 9},\n" +
+                "      {\"fund\": \"55688\",\"date\": \"07/15/2022\",\"amount\": 30},\n" +
+                "      {\"fund\": \"5588\",\"date\": \"07/15/2022\",\"amount\": 12}\n" +
                 "    ]\n" +
                 "  }\n" +
+                "}";
+        String getNameMockJson = "{\n" +
+                "  \"status\": " +
+                "\"success\",\n" +
+                "  \"data\": \"BillFunds\"\n" +
                 "}";
 
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                String donations = "[{\"fund\":\"55688\",\"date\":\"07/07/2022\",\"amount\":" + 29 + "}]";
-                String contributorInfo = "\"_id\":\"1\",\"name\":\"lkk\",\"email\":\"hp@com\"," +
-                        "\"creditCardNumber\":\"1111\",\"creditCardCVV\":\"222\"," +
-                        "\"creditCardExpiryMonth\":" + 05 + ",\"creditCardExpiryYear\":"+ 25 + "," +
-                        "\"creditCardPostCode\":\"15555\",\"donations\":" + donations;
-                String data = "\"data\":" + "{" + contributorInfo + "}";
-                String status = "\"status\":\"success\"";
-                String response = "{" + status + "," + data + "}";
-                return response;
+                if (resource.equals("/findFundNameById")) return getNameMockJson;
+                return mockJson;
             }
         });
 
@@ -56,19 +64,38 @@ public class DataManagerAttemptLoginTest {
     }
 
     @Test
-    public void testAttemptLoginTwo() {
+    public void testAttemptLoginWithFailStatus() {
+        String mockJson = "{\n" +
+                "\"status\":\"fail\",\n" +
+                "  \"data\": {\n" +
+                "    \"_id\": \"1\",\n" +
+                "    \"name\": \"lkk\",\n" +
+                "    \"email\": \"hp@com\",\n" +
+                "    \"creditCardNumber\": \"1111\",\n" +
+                "    \"creditCardCVV\": \"222\",\n" +
+                "    \"creditCardExpiryMonth\": 5,\n" +
+                "    \"creditCardExpiryYear\": 25,\n" +
+                "    \"creditCardPostCode\": \"15555\",\n" +
+                "    \"donations\": [\n" +
+                "      {\"fund\": \"55688\",\"date\": \"07/07/2022\",\"amount\": 29},\n" +
+                "      {\"fund\": \"5588\",\"date\": \"07/08/2022\",\"amount\": 9},\n" +
+                "      {\"fund\": \"55688\",\"date\": \"07/15/2022\",\"amount\": 30},\n" +
+                "      {\"fund\": \"5588\",\"date\": \"07/15/2022\",\"amount\": 12}\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}";
+
+        String getNameMockJson = "{\n" +
+                "  \"status\": " +
+                "\"success\",\n" +
+                "  \"data\": \"BillFunds\"\n" +
+                "}";
+
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                String donations = "[{\"fund\":\"55688\",\"date\":\"07/07/2022\",\"amount\":" + 29 + "}]";
-                String contributorInfo = "\"_id\":\"1\",\"name\":\"lkk\",\"email\":\"hp@com\"," +
-                        "\"creditCardNumber\":\"1111\",\"creditCardCVV\":\"222\"," +
-                        "\"creditCardExpiryMonth\":" + 05 + ",\"creditCardExpiryYear\":"+ 25 + "," +
-                        "\"creditCardPostCode\":\"15555\",\"donations\":" + donations;
-                String data = "\"data\":" + "{" + contributorInfo + "}";
-                String status = "\"status\":\"fail\"";
-                String response = "{" + status + "," + data + "}";
-                return response;
+                if (resource.equals("/findFundNameById")) return getNameMockJson;
+                return mockJson;
             }
         });
 
@@ -78,19 +105,38 @@ public class DataManagerAttemptLoginTest {
     }
 
     @Test
-    public void testAttemptLoginThree() {
+    public void testAttemptLoginWithTypoForCVV() {
+        String mockJson = "{\n" +
+                "\"status\":\"success\",\n" +
+                "  \"data\": {\n" +
+                "    \"_id\": \"1\",\n" +
+                "    \"name\": \"lkk\",\n" +
+                "    \"email\": \"hp@com\",\n" +
+                "    \"creditCardNumber\": \"1111\",\n" +
+                "    \"creditCardCV\": \"222\",\n" +
+                "    \"creditCardExpiryMonth\": 5,\n" +
+                "    \"creditCardExpiryYear\": 25,\n" +
+                "    \"creditCardPostCode\": \"15555\",\n" +
+                "    \"donations\": [\n" +
+                "      {\"fund\": \"55688\",\"date\": \"07/07/2022\",\"amount\": 29},\n" +
+                "      {\"fund\": \"5588\",\"date\": \"07/08/2022\",\"amount\": 9},\n" +
+                "      {\"fund\": \"55688\",\"date\": \"07/15/2022\",\"amount\": 30},\n" +
+                "      {\"fund\": \"5588\",\"date\": \"07/15/2022\",\"amount\": 12}\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}";
+
+        String getNameMockJson = "{\n" +
+                "  \"status\": " +
+                "\"success\",\n" +
+                "  \"data\": \"BillFunds\"\n" +
+                "}";
+
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                String donations = "[{\"fund\":\"55688\",\"date\":\"07/07/2022\",\"amount\":" + 29 + "}]";
-                String contributorInfo = "\"_id\":\"1\",\"name\":\"lkk\",\"email\":\"hp@com\"," +
-                        "\"creditCardNumber\":\"1111\",\"creditCardCVV\":\"222\"," +
-                        "\"creditCardExpiryMonth\":" + 05 + ",\"creditCardExpiryYear\":"+ 25 + "," +
-                        "\"creditCardPostCode\":\"15555\",\"donations\":" + donations;
-                String data = "\"data\":" + "{" + contributorInfo + "}";
-                String status = "\"status\":\"fail\"";
-                String response = "{" + status + "," + data + "";
-                return response;
+                if (resource.equals("/findFundNameById")) return getNameMockJson;
+                return mockJson;
             }
         });
 

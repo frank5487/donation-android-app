@@ -34,7 +34,7 @@ public class ViewDonationsActivity extends AppCompatActivity {
         String[] donations = new String[contributor.getDonations().size()+1];
 
         // to save the totalAmount of donations
-        int totalAmount = 0;
+        long totalAmount = 0;
         int index = 0;
 
         for (Donation d : contributor.getDonations()) {

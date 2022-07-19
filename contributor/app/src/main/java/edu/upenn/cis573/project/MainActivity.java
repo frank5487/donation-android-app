@@ -29,8 +29,12 @@ public class MainActivity extends AppCompatActivity {
         EditText passwordField = findViewById(R.id.passwordField);
         String password = passwordField.getText().toString();
 
-
-        contributor = dataManager.attemptLogin(login, password);
+        try {
+            contributor = dataManager.attemptLogin(login, password);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+            return;
+        }
 
         if (contributor == null) {
 
