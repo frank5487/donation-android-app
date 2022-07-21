@@ -1,7 +1,6 @@
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class Donation {
 	
@@ -32,7 +31,7 @@ public class Donation {
 	public String getDate() {
 		  try {
 		   Date newDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(date);
-		   String formattedDate = new SimpleDateFormat("MMMMM dd, yyyy", Locale.ENGLISH).format(newDate);
+		   String formattedDate = new SimpleDateFormat("MMMMM dd, yyyy").format(newDate);
 		   return formattedDate;
 		  }   catch(Exception e){
 		   System.out.println("bad Date format/unable to parse date");

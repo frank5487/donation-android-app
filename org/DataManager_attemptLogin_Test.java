@@ -46,6 +46,8 @@ public class DataManager_attemptLogin_Test {
 		assertEquals(100, d.getAmount());
 		assertEquals("July 11, 2022", d.getDate());
 //		assertEquals("2022-07-11T14:38:56.984Z", d.getDate());
+		
+		Organization o1 = dm.attemptLogin("org1", "123");
 	}
 	
 	@Test
@@ -69,7 +71,7 @@ public class DataManager_attemptLogin_Test {
 		
 	}
 	
-	@Test
+	@Test(expected=IllegalStateException.class)
 	public void testErrorLogin() {
 
 		DataManager dm = new DataManager(new WebClient("localhost", 3001) 
@@ -86,11 +88,11 @@ public class DataManager_attemptLogin_Test {
 
 		Organization o = dm.attemptLogin("", "sfgdsger");
 		
-		assertNull("failed to login.",o);
+//		assertNull("failed to login.",o);
 		
 	}
 	
-	@Test
+	@Test(expected=IllegalArgumentException.class)
 	public void testExceptionErrorInLogin() {
 
 		DataManager dm = new DataManager(new WebClient("localhost", 3001) 
@@ -106,7 +108,7 @@ public class DataManager_attemptLogin_Test {
 
 		Organization o = dm.attemptLogin(null, null);
 		
-		assertNull("encountered an exception error.",o);
+//		assertNull("encountered an exception error.",o);
 		
 	}
 	

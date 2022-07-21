@@ -38,7 +38,7 @@ public class DataManager_createFund_Test {
 		
 	}
 	
-	@Test
+	@Test(expected=IllegalStateException.class)
 	public void testFailedCreation() {
 
 		DataManager dm = new DataManager(new WebClient("localhost", 3001) 
@@ -74,7 +74,7 @@ public class DataManager_createFund_Test {
 		
 	}
 	
-	@Test
+	@Test(expected=IllegalArgumentException.class)
 	public void testExceptionErrorInCreation() {
 
 		DataManager dm = new DataManager(new WebClient("localhost", 3001) 
@@ -91,7 +91,7 @@ public class DataManager_createFund_Test {
 		
 		Fund f = dm.createFund(null, null, "this is the new fund", 10000);
 		
-		assertNull("encountered an exception error.",f);
+//		assertNull("encountered an exception error.",f);
 		
 	}
 
