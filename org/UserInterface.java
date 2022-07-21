@@ -274,11 +274,11 @@ public class UserInterface {
 //			DataManager ds = new DataManager(null);
 			DataManager ds = new DataManager(new WebClient("localhost", 3001));
 			
-			String login ="org1";
-			String password ="123";
+			// String login ="org1";
+			// String password ="123";
 	//		String password =null;
-	//		String login = args[0];
-	//		String password = args[1];
+			String login = args[0];
+			String password = args[1];
 			
 			Organization org = ds.attemptLogin(login, password);
 			
