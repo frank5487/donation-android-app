@@ -4,10 +4,11 @@ import java.util.Scanner;
 
 public class WebClient {
 	
-	private String host;
-	private int port;
+	private final String host;
+	final int port;
 	
 	public WebClient(String host, int port) {
+//		if(port!=3001) throw new IllegalStateException();
 		this.host = host;
 		this.port = port;
 	}

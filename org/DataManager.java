@@ -12,8 +12,14 @@ import org.json.simple.parser.JSONParser;
 public class DataManager {
 
 	private final WebClient client;
+	private Map<String, String> FindNameById = new HashMap<>(); 
 
 	public DataManager(WebClient client) {
+//		add defensive programming
+		if(client==null||client.port!=3001) {
+			System.out.println("Client is null or port not equals 3001.");
+			throw new IllegalStateException(); //||client.port!=3001, change port to visible or modify in webclient
+		}
 		this.client = client;
 	}
 
@@ -25,11 +31,22 @@ public class DataManager {
 	public Organization attemptLogin(String login, String password) {
 
 		try {
+//			add defensive programming
+			if (login==null||password==null) {
+				System.out.println("Id or password is null.");
+				throw new IllegalArgumentException();
+			}
 			Map<String, Object> map = new HashMap<>();
 			map.put("login", login);
 			map.put("password", password);
 			String response = client.makeRequest("/findOrgByLoginAndPassword", map);
 //			System.out.println(response);
+//			add defensive programming
+//			response="I like";
+			if(response==null) {
+				System.out.println("Fail to get response from API.");
+				throw new IllegalStateException();
+			}
 
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);
@@ -67,7 +84,6 @@ public class DataManager {
 						String contributorId = (String)donation.get("contributor");
 //						System.out.println(contributorId);
 						String contributorName = this.getContributorName(contributorId);
-//						String contributorName = this.getContributorName("62cc35809397e92ec0263d7b");
 //						System.out.println(contributorName);
 						long amount = (Long)donation.get("amount");
 //						add assert
@@ -90,16 +106,21 @@ public class DataManager {
 				System.out.println("Login failed, please try again.");
 				return null;
 			}
-//			add else: error
-			else {
-				System.out.println("Enconter an error, please try again.");
-				return null;
+//			add else if: error
+			else if (status.equals("error")){
+				System.out.println("Enconter an error in login, please try again.");
+				throw new IllegalStateException();
 			}
+			else return null;
+			
 		}
-		catch (Exception e) {
-			System.out.println("Exception Error (attemptLogin)");
-//			e.printStackTrace();
-			return null;
+		catch (IllegalStateException e) {
+			throw new IllegalStateException();
+		}catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException();
+		}catch (Exception e) { //do we need to restrict the type of exception for parse?
+//			System.out.println(e);
+			throw new IllegalStateException();
 		}
 	}
 
@@ -111,11 +132,22 @@ public class DataManager {
 	public String getContributorName(String id) {
 
 		try {
-
+//			add defensive programming
+			if(id==null) throw new IllegalArgumentException();
+//			add 2.1 return cache, shall we put it before makeRequest or if get null value after makeRequest?
+			if (FindNameById.containsKey(id)) {
+				System.out.println("get from cache");
+				return FindNameById.get(id);
+			}
 			Map<String, Object> map = new HashMap<>();
 			map.put("id", id);
 			String response = client.makeRequest("/findContributorNameById", map);
 //			System.out.println(response);
+//			add defensive programming
+			if(response==null) {
+				System.out.println("Fail to get response from API.");
+				throw new IllegalStateException();
+			}
 
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);
@@ -124,6 +156,8 @@ public class DataManager {
 			if (status.equals("success")) {
 				String name = (String)json.get("data");
 //				System.out.println(name);
+//				add 2.1 put into cache
+				FindNameById.put(id, name);
 				return name;
 			}
 //			add else if: not found
@@ -131,17 +165,21 @@ public class DataManager {
 				System.out.println("Cannot find the name by id, please check id and try again.");
 				return null;
 			}
-//			add else: error
-			else {
-				System.out.println("Enconter an error, please check id and try again.");
-				return null;
+//			add else if: error
+			else if (status.equals("error")){
+				System.out.println("Enconter an error in finding contributor's name, please try again.");
+				throw new IllegalStateException();
 			}
+			else return null;
 
 		}
-		catch (Exception e) {
-			System.out.println("Exception Error (getContributorName)");
-//			e.printStackTrace();
-			return null;
+		catch (IllegalStateException e) {
+			throw new IllegalStateException();
+		}catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException();
+		}catch (Exception e) { //do we need to restrict the type of exception for parse?
+			throw new IllegalStateException();
+//			return null;
 		}	
 	}
 
@@ -157,7 +195,11 @@ public class DataManager {
 				System.out.println("target should be greater than 0.");
 				return null;
 			}
-//			if(target <=0) throw new IllegalArgumentException();
+//			add defensive programming
+			if(orgId==null||name==null||description==null) {
+				System.out.println("organzation Id, name or description is null.");
+				throw new IllegalArgumentException();
+			}
 			Map<String, Object> map = new HashMap<>();
 			map.put("orgId", orgId);
 			map.put("name", name);
@@ -165,6 +207,11 @@ public class DataManager {
 			map.put("target", target);
 			String response = client.makeRequest("/createFund", map);
 //			System.out.println(response);
+//			add defensive programming
+			if(response==null) {
+				System.out.println("Fail to get response from API.");
+				throw new IllegalStateException();
+			}
 
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);
@@ -176,13 +223,21 @@ public class DataManager {
 				String fundId = (String)fund.get("_id");
 				return new Fund(fundId, name, description, target);
 			}
+//			add else if: error
+			else if (status.equals("error")){
+				System.out.println("Enconter an error in creating new fund, please try again.");
+				throw new IllegalStateException();
+			}
 			else return null;
 
 		}
-		catch (Exception e) {
-			System.out.println("Exception Error (createFund)");
-//			e.printStackTrace();
-			return null;
+		catch (IllegalStateException e) {
+			throw new IllegalStateException();
+		}catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException();
+		}catch (Exception e) { //do we need to restrict the type of exception for parse?
+			throw new IllegalStateException();
+//			return null;
 		}	
 	}
 

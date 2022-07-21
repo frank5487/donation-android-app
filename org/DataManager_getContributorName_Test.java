@@ -43,7 +43,7 @@ public class DataManager_getContributorName_Test {
 		assertNull(name);
 	}
 	
-	@Test
+	@Test(expected=IllegalStateException.class)
 	public void testErrorGetContributorName() {
 		DataManager dm = new DataManager(new WebClient("localhost", 3001) 
 		{
@@ -62,7 +62,7 @@ public class DataManager_getContributorName_Test {
 		assertNull(name);
 	}
 	
-	@Test
+	@Test(expected=IllegalArgumentException.class)
 	public void testExceptionErrorInGetContributorName() {
 		DataManager dm = new DataManager(new WebClient("localhost", 3001) 
 		{
@@ -77,7 +77,7 @@ public class DataManager_getContributorName_Test {
 		
 		String name = dm.getContributorName(null);
 		
-		assertNull("encountered an exception error.", name);
+//		assertNull("encountered an exception error.", name);
 	}
 	
 	
