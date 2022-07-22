@@ -15,7 +15,7 @@ public class DataManagerAttemptLoginTest {
 
     @Test
     public void testMD5() throws Exception {
-        String password = "789";
+        String password = "456";
         String passwordMD5 = MD5Util.encodeByMd5(password);
         System.out.println(password);
         System.out.println(passwordMD5);

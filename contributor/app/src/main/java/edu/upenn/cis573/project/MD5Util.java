@@ -11,9 +11,14 @@ public class MD5Util {
      * @return
      * @throws Exception
      */
-    public static String encodeByMd5(String password) throws NoSuchAlgorithmException {
+    public static String encodeByMd5(String password) {
         // There are SHA algorithm and MD5 algorithm in MessageDigest class in Java.
-        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        MessageDigest md5 = null;
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         // use MD5 algorithm, return the 16 byte value
         byte[] byteArray = md5.digest(password.getBytes());
         // MessageDigest is only able to convert String into byte[]
