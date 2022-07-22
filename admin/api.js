@@ -358,7 +358,50 @@ app.use('/allOrgs', (req, res) => {
 	    }).sort({ 'name': 'asc' });
     });
 
+/**
+ *  find a contributor by login ID
+ */
+app.use("/findContributorByLogin", (req, res)=>{
+	const query = {"login" : req.query.login};
+    
+	Contributor.findOne( query, (err, result) => {
+		if (err) {
+		    res.json({ "status": "error", "data" : err});
+		}
+		else if (!result){
+		    res.json({ "status": "not found", 'data': 'this login id has not been taken yet' });
+		}
+		else {
+		    res.json({ "status" : "success", "data" : result});
+		}
+	    });
+});
 
+/**
+ * create a new contributor
+ */
+app.use("/createContributor", (req, res)=>{
+	const contributor = new Contributor({
+		login: req.query.login,
+		password: req.query.password,
+		name: req.query.name,
+		email: req.query.email,
+		creditCardNumber: req.query.creditCardNumber,
+		creditCardCVV: req.query.creditCardCVV,
+		creditCardExpiryMonth: req.query.creditCardExpiryMonth,
+		creditCardExpiryYear: req.query.creditCardExpiryYear,
+		creditCardPostCode: req.query.creditCardPostCode,
+		donations: []
+	});
+
+	contributor.save((err)=>{
+		if (err) {
+			res.json({'status': 'error', 'data': err});
+		} else {
+			res.json({'status': 'success', 'data': "Successfully created a new contributor"});
+		}
+	});
+});
 
 /********************************************************/
 

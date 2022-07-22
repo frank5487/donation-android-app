@@ -49,13 +49,8 @@ public class DataManager {
             map.put("login", login);
             map.put("password", password);
             String response = client.makeRequest("/findContributorByLoginAndPassword", map);
-            if (response == null) {
-                throw new IllegalStateException("connect to the wrong port...");
-            }
+            checkResponseIsValid(response);
 
-            if (!isJson(response)) {
-                throw new IllegalStateException("this is not a json format data...");
-            }
             JSONObject json = new JSONObject(response);
             String status = (String)json.get("status");
             if (status.equals("error")) {
@@ -134,13 +129,8 @@ public class DataManager {
             Map<String, Object> map = new HashMap<>();
             map.put("id", id);
             String response = client.makeRequest("/findFundNameById", map);
-            if (response == null) {
-                throw new IllegalStateException("connect to the wrong port...");
-            }
+            checkResponseIsValid(response);
 
-            if (!isJson(response)) {
-                throw new IllegalStateException("this is not a json format data...");
-            }
             JSONObject json = new JSONObject(response);
             String status = (String)json.get("status");
             if (status.equals("error")) {
@@ -174,13 +164,7 @@ public class DataManager {
         try {
             Map<String, Object> map = new HashMap<>();
             String response = client.makeRequest("/allOrgs", map);
-            if (response == null) {
-                throw new IllegalStateException("connect to the wrong port...");
-            }
-
-            if (!isJson(response)) {
-                throw new IllegalStateException("this is not a json format data...");
-            }
+            checkResponseIsValid(response);
 
             JSONObject json = new JSONObject(response);
             String status = (String)json.get("status");
@@ -264,13 +248,7 @@ public class DataManager {
                 return false;
             }
             String response = client.makeRequest("/makeDonation", map);
-            if (response == null) {
-                throw new IllegalStateException("connect to the wrong port...");
-            }
-
-            if (!isJson(response)) {
-                throw new IllegalStateException("this is not a json format data...");
-            }
+            checkResponseIsValid(response);
 
             JSONObject json = new JSONObject(response);
             String status = (String)json.get("status");
@@ -303,15 +281,18 @@ public class DataManager {
         if (contributorInfo == null) {
             throw new IllegalArgumentException("The personal info of upcoming contributor cannot be null");
         }
-        String originPassword = (String) contributorInfo.get("password");
-        contributorInfo.put("password", MD5Util.encodeByMd5((String)contributorInfo.get("password")));
 
         if (client == null) {
             throw new IllegalStateException("client is null");
         }
+
         if (checkIsBlank(contributorInfo)) {
             throw new IllegalStateException("Personal info cannot be empty or null");
         }
+
+        String originPassword = (String) contributorInfo.get("password");
+        contributorInfo.put("password", MD5Util.encodeByMd5((String)contributorInfo.get("password")));
+
         if (hasDuplicatedLoginID(contributorInfo)) {
             throw new IllegalStateException("This login ID has been used by others, please input another login ID...");
         }
@@ -355,16 +336,16 @@ public class DataManager {
             return false;
         } else if ("success".equals(status)) {
             return true;
-        } else if ("error".equals(status)) {
-            throw new IllegalStateException(data);
         } else {
-            throw new IllegalStateException("something wrong on RESTful API server to query Contributor info by id");
+            throw new IllegalStateException(data);
         }
     }
 
     private boolean checkResponseIsValid(String response) {
-        if (response == null) {
-            throw new IllegalStateException("something wrong on RESTful API server");
+        if (response == null || response.contains("NullPointerException")) {
+            throw new IllegalStateException("RESTful API server has not been activated yet...");
+        } else if (response.contains("ConnectException")) {
+            throw new IllegalStateException(response);
         }
 
         if (!isJson(response)) {
