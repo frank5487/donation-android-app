@@ -41,3 +41,17 @@ Here is the single writeup for [phase2](./writeup-phase2.md)
     -   Muxue Kou: Task2.8
 
     -   Zhihao Yan: Task2.3
+
+#### phase3
+
+Here is the single writeup for [phase3](./writeup-phase3.md)
+
+-   Work distribution:
+
+    -   [Yung-Jen Yang](./contributor/README.md): Task3.4
+
+    -   Tianyi Zhang: 
+
+    -   Muxue Kou: 
+
+    -   Zhihao Yan: 
