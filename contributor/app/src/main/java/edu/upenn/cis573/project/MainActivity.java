@@ -50,4 +50,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    public void onSignUpButtonClick(View view) {
+
+        Intent i = new Intent(this, SignUpActivity.class);
+
+        startActivity(i);
+    }
 }

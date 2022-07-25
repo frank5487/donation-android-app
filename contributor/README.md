@@ -36,3 +36,14 @@
   - I used MD5 to encrypt the contributor's password
   - For Android (Java), I encapsulated the MD5Util (the code I looked up is from Stackflow)
   - For admin.js, I npm install md5 library to encrypt the password
+
+## phase3 writeup
+- Task3.4
+  - Created a sign up page(activity) for new contributor to register
+  - After registering, this new contributor would login and the app would jump to the menuActivity
+  - Before registering, it would check that this login ID has been taken or not and the rest of personal info cannot be empty
+  - Used defensive program to check if there are null which may crash the app
+  - When catching an error, popping up a tip to warn contributor and letting him to execute the same operation again
+  - Added some features in api.js so that the app can work normally
+    - 1. add findContributorByLogin => to check if there is duplicated login ID.
+    - 2. add createContributor => to save the data which is send by app into the mongoDB

@@ -21,6 +21,7 @@
         <activity android:name=".ViewDonationsActivity" />
         <activity android:name=".MakeDonationActivity" />
         <activity android:name=".AggregateDonationsActivity" />
+        <activity android:name=".SignUpActivity" />
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
