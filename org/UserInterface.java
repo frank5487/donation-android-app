@@ -44,11 +44,21 @@ public class UserInterface {
 				}
 				System.out.println("Enter the fund number to see more information.");
 			}
-			System.out.println("Enter 0 to create a new fund");
+			System.out.println("Enter 0 to create a new fund, Enter -1 to delete a fund");
+			System.out.println("Enter -1 to delete a fund");
+			System.out.println("Enter -2 to update organization's password");
+			System.out.println("Enter -3 to update organization's infomation");
 			int option = in.nextInt();
 			in.nextLine();
+			System.out.println();
 			if (option == 0) {
 				createFund(); 
+			} else if (option == -1) {
+				delFund();
+			} else if (option == -2) {
+				updateOrgPasswd();
+			} else if (option == -3) {
+				updateOrgInfo();
 			}
 			else {
 				displayFund(option);
@@ -261,9 +271,122 @@ public class UserInterface {
 			System.out.println("Fail to load data!");
 		}
 		
-		
+		long sum = 0;
+		for (Donation donation: donations) {
+			sum = sum + donation.getAmount();
+		}
+		System.out.println("Total amount of donations: " + sum);
+		System.out.println("Persentage Achieved: " + (sum/fund.getTarget())*100 + "%");
+	
 		System.out.println("Press the Enter key to go back to the listing of funds");
 		in.nextLine(); 
+	}
+
+	public void delFund() {
+		System.out.println("\nAll funds:");
+		HashMap<String, String> data = new HashMap<String, String>();
+		for (Fund f : org.getFunds()) {
+			//System.out.println("Fund name:"+f.getName()+", fund id:"+f.getId());
+			System.out.println("Fund name:"+f.getName());
+			data.put(f.getName(), f.getId());		
+		}
+		while (true) {
+			System.out.println("Enter fund name to delete a fund(Enter \"exit\" to exit):");
+			String fund_name = in.next();
+			in.nextLine();
+			if (fund_name.equals("exit")) {
+				break;
+			}
+			
+			String res = this.dataManager.deleteFund(data.get(fund_name));
+			if (res == null) {
+				System.out.println("Fail to delete fund:" + fund_name);
+			} else if (res.equals("success")) {
+			 	System.out.println("Success!");
+			 	List<Fund> newFund = org.getFunds();
+			 	Iterator<Fund> it = newFund.iterator();
+		        while (it.hasNext()) {
+					Fund Fundit = it.next();
+					if (fund_name.equals(Fundit.getName())) {
+						it.remove();
+					}
+					
+				}
+			 	
+			}
+		}
+	
+		System.out.println("Press the Enter key to go back to the listing of funds");
+		in.nextLine(); 
+	
+	}
+	
+	public void updateOrgPasswd() {
+		System.out.println("Update organization's password");
+		if (true) {
+			System.out.println("Please enter organization's old password: ");
+			String input = in.next();
+			in.nextLine();
+			String res = this.dataManager.vertifyOrgPassword(this.org.getId(), input);
+			if (res == null) {
+				System.out.println("Sorry! The old password you entered is inconsistent with the actual old password");
+			} else {
+				System.out.println("Please input a new password: ");
+				String newpw = in.next();
+				in.nextLine();
+				System.out.println("Please input a new password again to vertify: ");
+				String newpw1 = in.next();
+				in.nextLine();
+				
+				if (!newpw.equals(newpw1)) {
+					System.out.println("Sorry! The new password you entered for the second time is not equal to the new password you entered for the first time");
+					System.out.println("Please try again!");
+				}
+				res = this.dataManager.updateOrgPassword(this.org.getId(), input, newpw);
+				if (res == null) {
+					System.out.println("Fail to update organization's old password");
+				} else if (res.equals("success")) {
+					System.out.println("Success! Password changed successfully");
+				} else if (res.equals("notequal")) {
+					System.out.println("Sorry! The old password you entered is inconsistent with the actual old password");
+				}
+			}
+			
+		}
+		
+
+	}
+	
+	public void updateOrgInfo() {
+		System.out.println("Update organization's infomation");
+		if (true) {
+			System.out.println("Please enter organization's password: ");
+			String input = in.next();
+			in.nextLine();
+			String res = this.dataManager.vertifyOrgPassword(this.org.getId(), input);
+			if (res == null) {
+				System.out.println("Sorry! The password you entered is wrong");
+			} else {
+				System.out.println("Edit organization's name: ");
+				String name = in.next();
+				in.nextLine();
+				System.out.println("Edit organization's description: ");
+				String desc = in.next();
+				in.nextLine();
+				
+				res = this.dataManager.updateOrgInfo(this.org.getId(), input, name, desc);
+				if (res == null) {
+					System.out.println("Fail to update organization's old infomation");
+				} else if (res.equals("success")) {
+					System.out.println("Success! Organization's infomation changed successfully");
+				} else if (res.equals("notequal")) {
+					System.out.println("Sorry! The password you entered is wrong");
+				}
+			}
+			
+		}
+		
+
 	}
 	
 	
@@ -279,7 +402,7 @@ public class UserInterface {
 	//		String password =null;
 			String login = args[0];
 			String password = args[1];
-			
+
 			Organization org = ds.attemptLogin(login, password);
 			
 			if (org == null) {
