@@ -1,5 +1,6 @@
 
 import java.util.HashMap;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class DataManager {
 
@@ -21,6 +23,64 @@ public class DataManager {
 			throw new IllegalStateException(); //||client.port!=3001, change port to visible or modify in webclient
 		}
 		this.client = client;
+	}
+	
+	
+	/**
+	 * This method creates a new organization in the database using the /createOrg endpoint in the API
+	 * @return a new Org object if successful; null if unsuccessful
+	 */
+	public Organization createOrg(String login, String password, String name, String description) {
+
+		try {
+//			add defensive programming
+			if(login==null||password==null||name==null||description==null) {
+				System.out.println("login name, password, organization name or description is null.");
+				throw new IllegalArgumentException();
+			}
+			Map<String, Object> map = new HashMap<>();
+			map.put("login", login);
+			map.put("password", password);
+			map.put("name", name);
+			map.put("description", description);
+			String response = client.makeRequest("/createOrg", map);
+//			System.out.println(response);
+//			add defensive programming
+			if(response==null) {
+				System.out.println("Fail to get response from API.");
+				throw new IllegalStateException();
+			}
+
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(response);
+			
+			String status = (String)json.get("status");
+//			System.out.println(status);
+
+			if (status.equals("success")) {
+				JSONObject org = (JSONObject)json.get("data");
+				String orgId = (String)org.get("_id");
+				return new Organization(orgId, name, description);
+			}
+//			add else if: error
+			else if (status.contains("error")){
+				System.out.println("Enconter an error in creating new organization, please try again.");
+				throw new IllegalStateException();
+			}
+			else if (status.contains("login name already exists")) {
+				System.out.println("The login name already exists, please try another one.");
+				throw new IllegalArgumentException();
+			}
+			else return null;
+
+		}
+		catch (IllegalStateException e) {
+			throw new IllegalStateException();
+		}catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException();
+		}catch (ParseException e) { 
+			throw new IllegalStateException();
+		}	
 	}
 
 	/**
@@ -182,6 +242,7 @@ public class DataManager {
 //			return null;
 		}	
 	}
+	
 
 	/**
 	 * This method creates a new fund in the database using the /createFund endpoint in the API
@@ -240,6 +301,24 @@ public class DataManager {
 //			return null;
 		}	
 	}
-
+	
+	public String deleteFund(String orgId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", orgId);
+		String response = client.makeRequest("/deleteFund", map);
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject json = (JSONObject) parser.parse(response);
+			String status = (String)json.get("status");
+			if (status.equals("success")) {
+				return "success";
+			}
+		} catch (Exception e) {
+			System.out.println("Exception Error (deleteFund)");
+		}
+		
+		return null;
+		
+	}
 
 }

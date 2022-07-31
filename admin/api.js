@@ -8,6 +8,45 @@ const {Donation} = require('./DbConfig.js');
 
 
 /*
+create a new organization
+*/
+app.use('/createOrg', (req, res) => {
+
+	var org = new Organization({
+		login: req.query.login,
+		password: req.query.password,
+		name: req.query.name,
+		description: req.query.description,
+		funds: []
+	    });
+
+	var login={"login" : req.query.login};
+
+	Organization.findOne( login, (err, result) => {
+		if (err) {
+		    res.json({ "status": "find error", "data" : err});
+		}
+		else if (result){
+		    res.json({ "status": "login name already exists" });
+		}
+		else {
+		    org.save( (err) => {
+			if (err) {
+			    // res.render("error", {'error' : err});
+			    res.json({ "status": "save error", "data" : err});
+			}
+			else {
+			    //console.log(org);
+			    // res.render("viewOrg", { 'org': org , 'status': 'Successfully created new Organization'});
+			    res.json({ "status": "success", "data" : org});
+			}
+		    });
+			}
+	    });
+	
+    });
+
+/*
 Return an org with login specified as req.query.login and password specified as 
 req.query.password; this essentially acts as login for organizations
 */
@@ -358,53 +397,15 @@ app.use('/allOrgs', (req, res) => {
 	    }).sort({ 'name': 'asc' });
     });
 
-/**
- *  find a contributor by login ID
- */
-app.use("/findContributorByLogin", (req, res)=>{
-	const query = {"login" : req.query.login};
-    
-	Contributor.findOne( query, (err, result) => {
-		if (err) {
-		    res.json({ "status": "error", "data" : err});
-		}
-		else if (!result){
-		    res.json({ "status": "not found", 'data': 'this login id has not been taken yet' });
-		}
-		else {
-		    res.json({ "status" : "success", "data" : result});
-		}
-	    });
-});
 
-/**
- * create a new contributor
- */
-app.use("/createContributor", (req, res)=>{
-	const contributor = new Contributor({
-		login: req.query.login,
-		password: req.query.password,
-		name: req.query.name,
-		email: req.query.email,
-		creditCardNumber: req.query.creditCardNumber,
-		creditCardCVV: req.query.creditCardCVV,
-		creditCardExpiryMonth: req.query.creditCardExpiryMonth,
-		creditCardExpiryYear: req.query.creditCardExpiryYear,
-		creditCardPostCode: req.query.creditCardPostCode,
-		donations: []
-	});
-
-	contributor.save((err)=>{
-		if (err) {
-			res.json({'status': 'error', 'data': err});
-		} else {
-			res.json({'status': 'success', 'data': "Successfully created a new contributor"});
-		}
-	});
-});
 
 /********************************************************/
-
+app.use('/', (req, res) => {
+	res.write("<a href=\"/allOrgs\">Administer Organizations</a>");
+	res.write("<p>");
+	res.write("<a href=\"/allContributors\">Administer Contributors</a>");
+	res.send();
+    });
 
 app.listen(3001,  () => {
 	console.log('Listening on port 3001');

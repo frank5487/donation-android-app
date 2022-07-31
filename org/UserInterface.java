@@ -23,15 +23,21 @@ public class UserInterface {
 	private Organization org;
 	private Scanner in = new Scanner(System.in);
 	
-	public UserInterface(DataManager dataManager, Organization org) {
+//	public UserInterface(DataManager dataManager, Organization org) {
+//		this.dataManager = dataManager;
+//		this.org = org;
+//	}
+	
+	public UserInterface(DataManager dataManager) {
 		this.dataManager = dataManager;
-		this.org = org;
+		this.org = null;
 	}
 	
 	public void start() {
-				
+		
 		while (true) {
 			System.out.println("\n\n");
+			
 			if (org.getFunds().size() > 0) {
 				System.out.println("There are " + org.getFunds().size() + " funds in this organization:");
 			
@@ -44,11 +50,14 @@ public class UserInterface {
 				}
 				System.out.println("Enter the fund number to see more information.");
 			}
-			System.out.println("Enter 0 to create a new fund");
+			System.out.println("Enter 0 to create a new fund, Enter -1 to delete a fund\"");
 			int option = in.nextInt();
 			in.nextLine();
 			if (option == 0) {
 				createFund(); 
+			}
+			else if (option == -1) {
+				delFund();
 			}
 			else {
 				displayFund(option);
@@ -57,80 +66,44 @@ public class UserInterface {
 			
 	}
 	
+	
 	public void createFund() {
 		  
-		  System.out.print("Enter the fund name: ");
-		  String name = in.nextLine().trim();
-		  while (name.length() <= 2 || name.length() >=20){
-		   System.out.println("Name too short or too long, please re-enter:");
-		   name = in.nextLine().trim();
-		  }
-		  
-		  System.out.print("Enter the fund description: ");
-		  String description = in.nextLine().trim();
-		  while (description.length() == 0){
-		   System.out.println("Description can not be empty, please re-enter:");
-		   description = in.nextLine().trim();
-		  }
-		  
-		  System.out.print("Enter the fund target: ");
-		  while(true) {
-			  try {
-				  String target_ = in.nextLine().trim();
-				  long target = Long.valueOf(target_).longValue();
-				  if (target>0) {
+	  System.out.print("Enter the fund name: ");
+	  String name = in.nextLine().trim();
+	  while (name.length() <= 2 || name.length() >=20){
+	   System.out.println("Name too short or too long, please re-enter:");
+	   name = in.nextLine().trim();
+	  }
+	  
+	  System.out.print("Enter the fund description: ");
+	  String description = in.nextLine().trim();
+	  while (description.length() == 0){
+	   System.out.println("Description can not be empty, please re-enter:");
+	   description = in.nextLine().trim();
+	  }
+	  
+	  System.out.print("Enter the fund target: ");
+	  while(true) {
+		  try {
+			  String target_ = in.nextLine().trim();
+			  long target = Long.valueOf(target_).longValue();
+			  if (target>0) {
 //				  in.nextLine();
-				  Fund fund = dataManager.createFund(org.getId(), name, description, target);
-				  org.getFunds().add(fund);
-				  break;
-				  }else {
-					  System.out.println("Must be a positive number, please re-enter:");
-				  }
-				  
-				  } catch (NumberFormatException e){
-					  System.out.println("Must be a positive number, please re-enter:");
-				  }
-		  }
-		  
-//		  while (target <= 0){
-//		   System.out.println("Must be a positive number, please re-enter:");
-//		   target_ = in.nextLine().trim();
-//		   target = in.nextInt();
-//		  }
-		  
-		 }
+			  Fund fund = dataManager.createFund(org.getId(), name, description, target);
+			  org.getFunds().add(fund);
+			  break;
+			  }else {
+				  System.out.println("Must be a positive number, please re-enter:");
+			  }
+			  
+			  } catch (NumberFormatException e){
+				  System.out.println("Must be a positive number, please re-enter:");
+			  }
+	  	}
+	  
+	 }
 
-    
-	
-	
-//	 public void displayFund(int fundNumber) {
-//  
-//		Fund fund = org.getFunds().get(fundNumber - 1);
-//		
-//		
-//		System.out.println("\n\n");
-//		System.out.println("Here is information about this fund:");
-//		System.out.println("Name: " + fund.getName());
-//		System.out.println("Description: " + fund.getDescription());
-//		System.out.println("Target: $" + fund.getTarget());
-//		
-//		List<Donation> donations = fund.getDonations();
-//		System.out.println("Number of donations: " + donations.size());
-//		for (Donation donation : donations) {
-//		System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + donation.getDate());
-//		}
-//		
-//		double sum = 0;
-//			for (Donation donation: donations) {
-//				sum = sum + donation.getAmount();
-//			}
-//		System.out.println("Total amount of donations: " + sum);
-//		System.out.println("Persentage Achieved: " + (sum/fund.getTarget())*100 + "%");
-//		
-//		
-//		System.out.println("Press the Enter key to go back to the listing of funds");
-//		in.nextLine(); 
-//	}
 	
 	 public void displayFund(int fundNumber) {
 		  
@@ -151,7 +124,7 @@ public class UserInterface {
 		System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + donation.getDate());
 		}
 		
-		long sum = 0;
+		double sum = 0;
 			for (Donation donation: donations) {
 				sum = sum + donation.getAmount();
 			}
@@ -265,31 +238,128 @@ public class UserInterface {
 		System.out.println("Press the Enter key to go back to the listing of funds");
 		in.nextLine(); 
 	}
+	 
+	public void delFund() {
+		System.out.println("\nAll funds:");
+		HashMap<String, String> data = new HashMap<String, String>();
+		for (Fund f : org.getFunds()) {
+			System.out.println("Fund name:"+f.getName()+" ,fund id:"+f.getId());
+			data.put(f.getName(), f.getId());		
+		}
+		while (true) {
+			System.out.println("Enter fund name to delete a fund(Enter \"exit\" to exit):");
+			String fund_name = in.next();
+			in.nextLine();
+			if (fund_name.equals("exit")) {
+				break;
+			}
+			
+			String res = this.dataManager.deleteFund(data.get(fund_name));
+			if (res == null) {
+				System.out.println("Fail to delete fund! You enter an id:" + fund_name);
+			} else if (res.equals("success")) {
+			 	System.out.println("Success!");
+			 	List<Fund> newFund = org.getFunds();
+			 	Iterator<Fund> it = newFund.iterator();
+		        while (it.hasNext()) {
+					Fund Fundit = it.next();
+					if (fund_name.equals(Fundit.getName())) {
+						it.remove();
+					}
+					
+				}
+			}
+		}
 	
+		System.out.println("Press the Enter key to go back to the listing of funds");
+		in.nextLine(); 
+	
+	}
+	
+		
+	public String chooseLoginOrCreate() {
+//		choose to login or create new organization
+
+		while(true) {
+			System.out.println("Please enter 1 to login in, enter 2 to create new organization account.");
+
+			int option = in.nextInt();
+			in.nextLine();
+			
+			if (option == 1) return "login";
+			else if (option == 2) return "create new account";
+		}
+	}
+	
+	public Organization createOrg() {
+		while(true) {
+		  
+		  System.out.print("Enter the login name: ");
+		  String login_name = in.nextLine().trim();
+		  while (login_name.length() ==0 || login_name.length() >=20){
+		   System.out.println("Login name is empty or too long, please re-enter:");
+		   login_name = in.nextLine().trim();
+		  }
+		  
+		  System.out.print("Enter the password: ");
+		  String password = in.nextLine().trim();
+		  while (password.length() == 0){
+		   System.out.println("Password can not be empty, please re-enter:");
+		   password = in.nextLine().trim();
+		  }
+		  
+		  System.out.print("Enter the organization name: ");
+		  String org_name = in.nextLine().trim();
+		  while (org_name.length() == 0 || org_name.length() >=20){
+		   System.out.println("Organization name is empty or too long, please re-enter:");
+		   org_name = in.nextLine().trim();
+		  }
+		  
+		  System.out.print("Enter the organization description: ");
+		  String org_description = in.nextLine().trim();
+		  while (org_description.length() == 0){
+		   System.out.println("Description can not be empty, please re-enter:");
+		   org_description = in.nextLine().trim();
+		  }
+		  try {
+			  System.out.println();
+			  Organization org = dataManager.createOrg(login_name, password, org_name, org_description);
+			  System.out.println();
+			  return org;
+		  } catch(Exception e) {}
+		}
+			  
+	}
 	
 	public static void main(String[] args) {
-//		? do we need to create while true until get success.
 //		while(true) {
 		try {
-//			DataManager ds = new DataManager(null);
 			DataManager ds = new DataManager(new WebClient("localhost", 3001));
-			
-			// String login ="org1";
-			// String password ="123";
-	//		String password =null;
-			String login = args[0];
-			String password = args[1];
-			
-			Organization org = ds.attemptLogin(login, password);
-			
-			if (org == null) {
-				System.out.println("Login failed.");
+			UserInterface ui = new UserInterface(ds);
+			String option = ui.chooseLoginOrCreate();
+			if(option.equals("create new account")) {
+				Organization org = ui.createOrg();
+				ui.org = org;
+				ui.createFund(); 
+			} else if (option.equals("login")) {
+//				need to check whether login and password still store in args
+//				String login ="t1"; //"org1";
+//				String password ="123";
+				String login = args[0];
+				String password = args[1];
+				
+				Organization org = ds.attemptLogin(login, password);
+				
+				if (org == null) System.out.println("Login failed.");
+				else {
+					System.out.println("Login succeeded.");
+					ui.org = org;
+				}	
+//					break;
 			}
-			else {
-				UserInterface ui = new UserInterface(ds, org);	
-				ui.start();	
-//				break;
-			}
+			ui.start();
+			
+			
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -297,3 +367,4 @@ public class UserInterface {
 //	}
 
 }
+
