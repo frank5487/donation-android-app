@@ -330,14 +330,14 @@ public class DataManager {
 
         Map<String, Object> json = canParseJson(response, "status", "data");
         String status = (String) json.get("status");
-        String data = (String) json.get("data");
+        // JSONObject data = (JSONObject)json.get("data");
 
         if ("not found".equals(status)) {
             return false;
         } else if ("success".equals(status)) {
             return true;
         } else {
-            throw new IllegalStateException(data);
+            throw new IllegalStateException("something wrong with this login ID");
         }
     }
 
