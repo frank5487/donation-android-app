@@ -242,7 +242,6 @@ public class DataManager {
 //			return null;
 		}	
 	}
-	
 
 	/**
 	 * This method creates a new fund in the database using the /createFund endpoint in the API
@@ -302,10 +301,42 @@ public class DataManager {
 		}	
 	}
 	
+	
 	public String deleteFund(String orgId) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", orgId);
 		String response = client.makeRequest("/deleteFund", map);
+		if(response==null) {
+				System.out.println("Fail to get response from API.");
+				throw new IllegalStateException();
+		}
+//		System.out.println(response);
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject json = (JSONObject) parser.parse(response);
+			String status = (String)json.get("status");
+//			System.out.println(json);
+			if (status.equals("success")) {
+				return "success";
+			}
+		} catch (Exception e) {
+			System.out.println("Fail to delete Fund, please try again.");
+//			e.printStackTrace();
+		}
+		
+			
+		return null;
+	}
+	
+	public String vertifyOrgPassword(String orgId, String passwd) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", orgId);
+		map.put("password", passwd);
+		String response = client.makeRequest("/vertifyOrgPasswd", map);
+		if(response == null) {
+				System.out.println("Fail to get response from API.");
+				throw new IllegalStateException();
+		}
 		JSONParser parser = new JSONParser();
 		try {
 			JSONObject json = (JSONObject) parser.parse(response);
@@ -314,11 +345,76 @@ public class DataManager {
 				return "success";
 			}
 		} catch (Exception e) {
-			System.out.println("Exception Error (deleteFund)");
+			System.out.println("Fail to decode json, please try again.");
+		}
+		return null;
+	}
+	
+	public String updateOrgPassword(String orgId, String oldpasswd, String newpasswd) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", orgId);
+		map.put("oldpassword", oldpasswd);
+		map.put("password", newpasswd);
+		String response = client.makeRequest("/updateOrgPassword", map);
+		if(response==null) {
+				System.out.println("Fail to get response from API.");
+				throw new IllegalStateException();
+		}
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject json = (JSONObject) parser.parse(response);
+			String status = (String)json.get("status");
+			if (status.equals("success")) {
+				
+				return "success";
+			} else {
+				String data = (String)json.get("data");
+				status = (String)json.get("status");
+				if (data.equals("Old password is not equal")) {
+					return "notequal";
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Fail to update organization's password, please try again.");
 		}
 		
+			
 		return null;
 		
 	}
+	
+	public String updateOrgInfo(String orgId, String password, String orgname, String orgdescription) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", orgId);
+		map.put("password", password);
+		map.put("name", orgname);
+		map.put("description", orgdescription);
+		String response = client.makeRequest("/updateOrgInfo", map);
+		if(response==null) {
+				System.out.println("Fail to get response from API.");
+				throw new IllegalStateException();
+		}
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject json = (JSONObject) parser.parse(response);
+			String status = (String)json.get("status");
+			if (status.equals("success")) {
+				return "success";
+			} else {
+				String data = (String)json.get("data");
+				status = (String)json.get("status");
+				if (data.equals("password is not equal")) {
+					return "notequal";
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Fail to update organization's infomation, please try again.");
+		}
+		
+			
+		return null;
+		
+	}
+
 
 }
