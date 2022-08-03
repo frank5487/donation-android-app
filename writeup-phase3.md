@@ -8,6 +8,13 @@ work distribution
 
 phase3 writeup
 --------------
+-Task 3.3: Organization App edit account information
+  - I added function updateOrgInfo()  in the UI file which enables who ever logged in to edit the organization’s account information. 
+  If the user selects to modify the account info, the app would let them enter the password. If the password is correct, the app would let the user to modify the org’s     name and/or description. If the user enters a wrong password, it would have a chance to re-enter the password. 
+  - Then, I also edited the DataManager file so that anything changed by the user would be able to sent to the server using the RESTful API. 
+
+
+
 
 - Task3.4
   - Created a sign up page(activity) for new contributor to register
