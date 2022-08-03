@@ -7,25 +7,27 @@ import org.junit.Test;
 public class DataManager_deleteFund_Test {
 
 	@Test
-	public void testdeleteFund() {
+	public void testdeleteFundSuccess() {
 
 		DataManager dm = new DataManager(new WebClient("localhost", 3001) {
 			
 			@Override
 			public String makeRequest(String resource, Map<String, Object> queryParams) {
-				return "{\"status\":\"success\",\"data\":{\"_id\":\"12345\",\"name\":\"new fund\",\"description\":\"this is the new fund\",\"target\":10000,\"org\":\"5678\",\"donations\":[],\"__v\":0}}";
-
+				if(resource=="/deleteFund") {
+					return "{\"status\":\"success\",\"data\":\"Any info\"}";
+				}
+				else return null;
 			}
 			
 		});
 		
 		
-		Fund f = dm.createFund("12345", "new fund", "this is the new fund", 10000);
-		
 		String res = dm.deleteFund("12345");
 		
 		assertEquals("success", res);
 	}
+	
+
 	
 	@Test
 	public void testdeleteFundFail() {
@@ -34,15 +36,33 @@ public class DataManager_deleteFund_Test {
 			
 			@Override
 			public String makeRequest(String resource, Map<String, Object> queryParams) {
-				return "{\"status\":\"error\"}";
-
+				if(resource=="/deleteFund") {
+					return "{\"status\":\"error\", \"data\": \"Any Error info\"}";
+				}
+				else return null;
 			}
 			
 		});
 		
-		
-		String res = dm.deleteFund("not exist fund");
+		String res = dm.deleteFund(null);
 
+		assertEquals(null, res);
+	}
+	
+	@Test(expected=IllegalStateException.class)
+	public void testFailsConnectApi() {
+		DataManager dm = new DataManager(new WebClient("localhost", 3001) 
+		{
+			
+			@Override
+			public String makeRequest(String resource, Map<String, Object> queryParams) {
+				return null;
+			}
+			
+		});
+		
+		String res = dm.deleteFund("12345");
+		
 		assertEquals(null, res);
 	}
 
