@@ -54,4 +54,4 @@ Here is the single writeup for [phase3](./writeup-phase3.md)
 
     -   Muxue Kou: 
 
-    -   Zhihao Yan: 
+    -   Zhihao Yan: Task3.2
