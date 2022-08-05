@@ -6,6 +6,44 @@ const {Fund} = require('./DbConfig.js');
 const {Contributor} = require('./DbConfig.js');
 const {Donation} = require('./DbConfig.js');
 
+/*
+create a new organization
+*/
+app.use('/createOrg', (req, res) => {
+
+	var org = new Organization({
+		login: req.query.login,
+		password: req.query.password,
+		name: req.query.name,
+		description: req.query.description,
+		funds: []
+	    });
+
+	var login={"login" : req.query.login};
+
+	Organization.findOne( login, (err, result) => {
+		if (err) {
+		    res.json({ "status": "find error", "data" : err});
+		}
+		else if (result){
+		    res.json({ "status": "login name already exists" });
+		}
+		else {
+		    org.save( (err) => {
+			if (err) {
+			    // res.render("error", {'error' : err});
+			    res.json({ "status": "save error", "data" : err});
+			}
+			else {
+			    //console.log(org);
+			    // res.render("viewOrg", { 'org': org , 'status': 'Successfully created new Organization'});
+			    res.json({ "status": "success", "data" : org});
+			}
+		    });
+			}
+	    });
+	
+    });
 
 /*
 Return an org with login specified as req.query.login and password specified as 
@@ -405,6 +443,91 @@ app.use("/createContributor", (req, res)=>{
 
 /********************************************************/
 
+/**
+ * Vertify organization’s password
+ */
+ app.use('/vertifyOrgPasswd', (req, res) => {
+
+	var filter = {"_id" : req.query.id };
+	
+
+	Organization.findOne( filter, (err, result) => {
+		if (err) {
+		    res.json({'status': 'error', 'data': err});
+		} else if (result.password != req.query.password) {
+		    res.json({'status': 'error', 'data': "password is not equal"});
+		} else {
+			res.json({'status': 'success'});
+		}
+	});
+});
+
+/**
+ * Change organization’s password
+ */
+app.use('/updateOrgPassword', (req, res) => {
+
+	var filter = {"_id" : req.query.id };
+
+	var update = { "password" : req.query.password};
+	
+	var action = { "$set" : update };
+	
+
+	Organization.findOne( filter, (err, result) => {
+		if (err) {
+		    res.json({'status': 'error', 'data': err});
+		} else if (result.password != req.query.oldpassword) {
+		    res.json({'status': 'error', 'data': "Old password is not equal"});
+		} else {
+			Organization.findOneAndUpdate( filter, action, { new : true }, (err, result) => {
+				if (err) {
+					res.json({'status': 'error', 'data': err});
+				} else {
+					
+					res.json({'status': 'success', 'data': "Successfully updated Organization's password"});
+					
+				}
+			});
+		}
+	});
+	
+	
+});
+
+
+/**
+ * Update organization’s account information
+ */
+app.use('/updateOrgInfo', (req, res) => {
+
+	var filter = {"_id" : req.query.id };
+
+	var update = { "name" : req.query.name, "description" : req.query.description};
+	
+	var action = { "$set" : update };
+	
+
+	Organization.findOne( filter, (err, result) => {
+		if (err) {
+		    res.json({'status': 'error', 'data': err});
+		} else if (result.password != req.query.password) {
+		    res.json({'status': 'error', 'data': "password is not equal"});
+		} else {
+			Organization.findOneAndUpdate( filter, action, { new : true }, (err, result) => {
+				if (err) {
+					res.json({'status': 'error', 'data': err});
+				} else {
+					
+					res.json({'status': 'success', 'data': "Successfully updated Organization's information"});
+					
+				}
+			});
+		}
+	});
+	
+	
+});
 
 app.listen(3001,  () => {
 	console.log('Listening on port 3001');
