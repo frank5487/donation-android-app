@@ -50,8 +50,8 @@ Here is the single writeup for [phase3](./writeup-phase3.md)
 
     -   [Yung-Jen Yang](./contributor/README.md): Task3.4
 
-    -   Tianyi Zhang: 
+    -   Tianyi Zhang:  Task3.1
 
-    -   Muxue Kou: 
+    -   Muxue Kou:  Task3.3
 
-    -   Zhihao Yan: 
+    -   Zhihao Yan:  Task3.2
