@@ -5,9 +5,9 @@ work distribution
 
 -   Tianyi Zhang: Task3.1
 
--   Muxue Kou:
+-   Muxue Kou: Task 3.3
 
--   Zhihao Yan:
+-   Zhihao Yan:Task 3.2
 
 phase3 writeup
 --------------
@@ -83,3 +83,9 @@ phase3 writeup
  
 
 -   Modified file: Create DataManager_createOrg_Test.java
+-  Task 3.3: Organization App edit account information
+I added function updateOrgInfo()  in the UI file which enables who ever logged in to edit the organization’s account information. 
+If the user selects to modify the account info, the app would let them enter the password. If the password is correct, the app would let the user to modify the org’s name and/or description. If the user enters a wrong password, it would have a chance to re-enter the password. 
+Then, I also edited the DataManager file so that anything changed by the user would be able to sent to the server using the RESTful API. 
+
+-Task3.2， it enables user to securely changing password, with correctly input current password twice, the system allow the users to cahnge the password, otherwise meesage are sent that it is unsecure.
